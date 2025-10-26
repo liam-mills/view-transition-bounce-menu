@@ -1,0 +1,104 @@
+---
+
+const links = [
+    {
+        'path': '/',
+        'label': 'Home'
+    },
+    {
+        'path': '/about',
+        'label': 'About'
+    },
+    {
+        'path': '/work',
+        'label': 'Work'
+    }
+]
+---
+
+<nav class="flex gap-12 items-center justify-center">
+    {links.map((link) => {
+        const path = `${import.meta.env.BASE_URL}${link.path}`;
+        const classList = [
+            {active: Astro.url.pathname === path},
+            ['py-1 relative transition-colors text-grey interact:text-black']
+        ];
+        return <a href={path} class:list={classList}>{link.label}</a>
+    })}
+</nav>
+
+<style is:global>
+    nav:before {
+        view-transition-name: active-nav-item;
+        content: '';
+        width: 6px;
+        height: 6px;
+        position: absolute;
+        position-anchor: --nav-anchor;
+        border-radius: 100%;
+        inset: calc(anchor(top) + 0.5lh) anchor(right) anchor(bottom) calc(anchor(left) - 0.5lh);
+        aspect-ratio: 1;
+        background: var(--color-black);
+    }
+    nav a {
+        position: relative;
+    }
+    nav a.active {
+        anchor-name: --nav-anchor;
+    }
+
+    :root {
+        --duration: 300ms;
+    }
+
+    ::view-transition-group(active-nav-item) {
+        animation-duration: var(--duration);
+        animation-timing-function: linear;
+    }
+
+    ::view-transition-new(active-nav-item) {
+        animation: bounce var(--duration) ease forwards, opacity var(--duration) steps(1) forwards;
+    }
+    ::view-transition-old(active-nav-item) {
+        animation: bounce var(--duration) cubic-bezier(.13,-0.28,.1,1) reverse, opacity var(--duration) steps(1) reverse, idleBounce var(--duration) ease var(--duration) forwards;
+    }
+
+    @keyframes idleBounce {
+        0% {
+            transform: translateY(0);
+        }
+        25% {
+            transform: translateY(2px);
+        }
+        75% {
+            transform: translateY(-1px);
+        }
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes opacity {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+	@keyframes bounce {
+        0% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-1lh);
+        }
+        100% {
+            transform: translateY(-1lh);
+        }
+	}
+</style>
