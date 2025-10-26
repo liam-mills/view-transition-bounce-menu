@@ -6,11 +6,11 @@ const links = [
         'label': 'Home'
     },
     {
-        'path': '/about',
+        'path': '/about/',
         'label': 'About'
     },
     {
-        'path': '/work',
+        'path': '/work/',
         'label': 'Work'
     }
 ]
@@ -20,7 +20,7 @@ const links = [
     {links.map((link) => {
         const path = `${import.meta.env.BASE_URL}${link.path}`;
         const classList = [
-            {active: Astro.url.pathname === path},
+            {active: Astro.url.pathname.replace(/^\/|\/$/g, '') === path.replace(/^\/|\/$/g, '')},
             ['py-1 relative transition-colors text-grey interact:text-black']
         ];
         return <a href={path} class:list={classList}>{link.label}</a>
